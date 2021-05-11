@@ -12,6 +12,7 @@ module Memoit
   def memoize(name)
     ivar_method_name = name.to_s.sub("?", "__questionmark").sub("!", "__bang")
     ivar_name = "@_memo_#{ivar_method_name}".to_sym
+    raise "memoize got undefined method `#{name}`" unless method_defined?(name) || private_method_defined?(name)
     mod = Module.new do
       define_method(name) do |*args, **kwargs, &block|
         return super(*args, **kwargs, &block) if block
